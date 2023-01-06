@@ -103,4 +103,8 @@ export class RecipeEditComponent implements OnInit {
     //get 1 level back
     this.router.navigate(['../'], { relativeTo: this.route });
   }
+
+  onDeleteIngredient(index: number) {
+    (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
+  }
 }
