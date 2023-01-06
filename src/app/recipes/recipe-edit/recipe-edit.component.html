@@ -34,6 +34,18 @@
         </div>
       </div>
 
+      <div
+        *ngIf="
+          recipeForm.get('name')?.invalid &&
+          (recipeForm.get('name')?.dirty || recipeForm.get('name')?.touched)
+        "
+        class="alert alert-danger"
+      >
+        <div *ngIf="recipeForm.get('name')?.errors?.['required']">
+          Name is required.
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
@@ -46,6 +58,19 @@
               #imagePath
             />
           </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          recipeForm.get('imagePath')?.invalid &&
+          (recipeForm.get('imagePath')?.dirty ||
+            recipeForm.get('imagePath')?.touched)
+        "
+        class="alert alert-danger"
+      >
+        <div *ngIf="recipeForm.get('imagePath')?.errors?.['required']">
+          Image Url is required.
         </div>
       </div>
 
@@ -74,6 +99,18 @@
         </div>
       </div>
 
+      <div
+        *ngIf="
+          recipeForm.get('description')?.invalid &&
+          (recipeForm.get('description')?.dirty ||
+            recipeForm.get('description')?.touched)
+        "
+        class="alert alert-danger"
+      >
+        <div *ngIf="recipeForm.get('description')?.errors?.['required']">
+          Description is required.
+        </div>
+      </div>
       <div class="row">
         <div class="col-xs-12" formArrayName="ingredients">
           <div
