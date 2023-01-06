@@ -11,7 +11,13 @@ import { RecipeService } from '../recipe.service';
 export class RecipeEditComponent implements OnInit {
   id!: number;
   editMode: boolean = false;
-  recipeForm!: FormGroup;
+  recipeForm: FormGroup = new FormGroup({
+    name: new FormControl('', Validators.required),
+    imagePath: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    ingredients: new FormArray([]),
+  });
+
   constructor(
     private route: ActivatedRoute,
     private recipeService: RecipeService
@@ -26,25 +32,16 @@ export class RecipeEditComponent implements OnInit {
   }
 
   private initForm() {
-    let recipeName = '';
-    let recipeImagePath = '';
-    let recipeDescription = '';
+    const fa = this.getFormArray();
 
     if (this.editMode) {
       const recipe = this.recipeService.getRecipe(this.id);
-      recipeName = recipe.name;
-      recipeImagePath = recipe.imagePath;
-      recipeDescription = recipe.description;
 
-      this.recipeForm = new FormGroup({
-        name: new FormControl(recipeName, Validators.required),
-        imagePath: new FormControl(recipeImagePath, Validators.required),
-        description: new FormControl(recipeDescription, Validators.required),
-        ingredients: new FormArray([]),
-      });
+      this.recipeForm.get('name')?.setValue(recipe.name);
+      this.recipeForm.get('imagePath')?.setValue(recipe.imagePath);
+      this.recipeForm.get('description')?.setValue(recipe.description);
 
       if (recipe['ingredients']) {
-        const fa = this.getFormArray();
         for (let ingredient of recipe.ingredients) {
           fa.push(
             new FormGroup({
@@ -78,6 +75,24 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.recipeForm);
+    // Method 1:
+    // const newRecipe = new Recipe(
+    //   this.recipeForm.value['name'],
+    //   this.recipeForm.value['description'],
+    //   this.recipeForm.value['imagePath'],
+    //   this.recipeForm.value['ingredients']
+    // );
+    // if (this.editMode) {
+    //   this.recipeService.updateRecipe(this.id, newRecipe);
+    // } else {
+    //   this.recipeService.addRecipe(newRecipe);
+    // }
+
+    // Method 2
+    if (this.editMode) {
+      this.recipeService.updateRecipe(this.id, this.recipeForm.value);
+    } else {
+      this.recipeService.addRecipe(this.recipeForm.value);
+    }
   }
 }
